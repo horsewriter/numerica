@@ -1,0 +1,220 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Iniciar Sesión - Numérica">
+	<div class="auth-container">
+		<div class="container">
+			<div class="auth-card">
+				<div class="auth-header">
+					<h1>Iniciar Sesión</h1>
+					<p>Accede a tu cuenta para participar en las subastas</p>
+				</div>
+
+				<form id="loginForm" class="auth-form">
+					<div class="form-group">
+						<label for="phone">Número de Teléfono</label>
+						<input type="tel" id="phone" name="phone" required placeholder="Ej: 5551234567" />
+					</div>
+
+					<div class="form-group">
+						<label for="password">Contraseña</label>
+						<input type="password" id="password" name="password" required />
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+						Iniciar Sesión
+					</button>
+
+					<div class="auth-footer">
+						<p>¿No tienes cuenta? <a href="/register">Registrarse</a></p>
+					</div>
+				</form>
+
+				<div id="message" class="message"></div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.auth-container {
+		min-height: calc(100vh - 160px);
+		display: flex;
+		align-items: center;
+		padding: 2rem 0;
+	}
+
+	.auth-card {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 3rem;
+		max-width: 500px;
+		margin: 0 auto;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.auth-header {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
+
+	.auth-header h1 {
+		font-size: 2.5rem;
+		margin-bottom: 0.5rem;
+		color: #d4af37;
+	}
+
+	.auth-header p {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 1.1rem;
+	}
+
+	.auth-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.form-group label {
+		font-weight: 600;
+		color: #d4af37;
+	}
+
+	.form-group input {
+		padding: 1rem;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.1);
+		color: #ffffff;
+		font-size: 1rem;
+		transition: border-color 0.3s ease;
+	}
+
+	.form-group input:focus {
+		outline: none;
+		border-color: #d4af37;
+	}
+
+	.form-group input::placeholder {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.btn-full {
+		width: 100%;
+		padding: 1rem;
+		font-size: 1.1rem;
+		margin-top: 1rem;
+	}
+
+	.auth-footer {
+		text-align: center;
+		margin-top: 2rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.auth-footer a {
+		color: #d4af37;
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.auth-footer a:hover {
+		text-decoration: underline;
+	}
+
+	.message {
+		margin-top: 1rem;
+		padding: 1rem;
+		border-radius: 8px;
+		text-align: center;
+		font-weight: 600;
+		display: none;
+	}
+
+	.message.success {
+		background: rgba(34, 197, 94, 0.2);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+		color: #22c55e;
+	}
+
+	.message.error {
+		background: rgba(239, 68, 68, 0.2);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+		color: #ef4444;
+	}
+
+	@media (max-width: 768px) {
+		.auth-card {
+			margin: 0 1rem;
+			padding: 2rem;
+		}
+	}
+</style>
+
+<script>
+	document.getElementById('loginForm').addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const submitBtn = document.getElementById('submitBtn');
+		const messageDiv = document.getElementById('message');
+		
+		const formData = new FormData(e.target);
+		const phone = formData.get('phone');
+		const password = formData.get('password');
+
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Iniciando sesión...';
+
+		try {
+			const response = await fetch('/api/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ phone, password }),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				// Store user data and token
+				localStorage.setItem('userToken', data.token);
+				localStorage.setItem('userData', JSON.stringify(data.user));
+				
+				showMessage('Inicio de sesión exitoso. Redirigiendo...', 'success');
+				setTimeout(() => {
+					window.location.href = '/subastas';
+				}, 2000);
+			} else {
+				showMessage(data.error || 'Error en el inicio de sesión', 'error');
+			}
+		} catch (error) {
+			showMessage('Error de conexión. Intenta nuevamente.', 'error');
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = 'Iniciar Sesión';
+		}
+	});
+
+	function showMessage(text, type) {
+		const messageDiv = document.getElementById('message');
+		messageDiv.textContent = text;
+		messageDiv.className = `message ${type}`;
+		messageDiv.style.display = 'block';
+		
+		setTimeout(() => {
+			messageDiv.style.display = 'none';
+		}, 5000);
+	}
+</script>
+

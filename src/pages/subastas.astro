@@ -1,0 +1,518 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Subastas Activas - Numérica">
+	<div class="auctions-container">
+		<div class="container">
+			<div class="auctions-header">
+				<h1>Subastas Activas</h1>
+				<p>Participa en las subastas de maquinaria industrial</p>
+			</div>
+
+			<div id="auctionsGrid" class="auctions-grid">
+				<div class="loading">
+					<div class="spinner"></div>
+					<p>Cargando subastas...</p>
+				</div>
+			</div>
+
+			<div id="loginPrompt" class="login-prompt" style="display: none;">
+				<div class="prompt-card">
+					<h3>Inicia sesión para participar</h3>
+					<p>Necesitas una cuenta para realizar pujas en las subastas.</p>
+					<div class="prompt-buttons">
+						<a href="/login" class="btn btn-primary">Iniciar Sesión</a>
+						<a href="/register" class="btn btn-secondary">Registrarse</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bid Modal -->
+	<div id="bidModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 id="modalTitle">Realizar Puja</h3>
+				<button class="close-btn" onclick="closeBidModal()">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div class="current-price">
+					<span>Precio actual:</span>
+					<span id="currentPrice" class="price">$0</span>
+				</div>
+				<form id="bidForm">
+					<div class="form-group">
+						<label for="bidAmount">Tu puja (debe ser mayor al precio actual):</label>
+						<input type="number" id="bidAmount" name="bidAmount" step="0.01" required />
+					</div>
+					<button type="submit" class="btn btn-primary btn-full" id="bidSubmitBtn">
+						Realizar Puja
+					</button>
+				</form>
+				<div id="bidMessage" class="message"></div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.auctions-container {
+		padding: 2rem 0;
+		min-height: calc(100vh - 160px);
+	}
+
+	.auctions-header {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	.auctions-header h1 {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+		color: #d4af37;
+	}
+
+	.auctions-header p {
+		font-size: 1.2rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.auctions-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+		gap: 2rem;
+	}
+
+	.auction-card {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		overflow: hidden;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.auction-card:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+	}
+
+	.auction-image {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+	}
+
+	.auction-content {
+		padding: 1.5rem;
+	}
+
+	.auction-title {
+		font-size: 1.5rem;
+		font-weight: bold;
+		margin-bottom: 0.5rem;
+		color: #d4af37;
+	}
+
+	.auction-description {
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 1rem;
+		line-height: 1.5;
+	}
+
+	.auction-prices {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 1.5rem;
+	}
+
+	.price-info {
+		text-align: center;
+	}
+
+	.price-label {
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.6);
+		margin-bottom: 0.25rem;
+	}
+
+	.price {
+		font-size: 1.25rem;
+		font-weight: bold;
+		color: #d4af37;
+	}
+
+	.bid-button {
+		width: 100%;
+		padding: 1rem;
+		background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+		color: #1a2332;
+		border: none;
+		border-radius: 8px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.bid-button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+	}
+
+	.bid-button:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+		transform: none;
+	}
+
+	.loading {
+		grid-column: 1 / -1;
+		text-align: center;
+		padding: 4rem;
+	}
+
+	.spinner {
+		width: 50px;
+		height: 50px;
+		border: 4px solid rgba(212, 175, 55, 0.3);
+		border-top: 4px solid #d4af37;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+		margin: 0 auto 1rem;
+	}
+
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+
+	.login-prompt {
+		grid-column: 1 / -1;
+		display: flex;
+		justify-content: center;
+		padding: 2rem;
+	}
+
+	.prompt-card {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 2rem;
+		text-align: center;
+		max-width: 400px;
+	}
+
+	.prompt-buttons {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.8);
+		backdrop-filter: blur(5px);
+	}
+
+	.modal-content {
+		background: rgba(26, 35, 50, 0.95);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		margin: 10% auto;
+		padding: 0;
+		border-radius: 16px;
+		width: 90%;
+		max-width: 500px;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+	}
+
+	.modal-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1.5rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.modal-header h3 {
+		color: #d4af37;
+		margin: 0;
+	}
+
+	.close-btn {
+		background: none;
+		border: none;
+		color: #ffffff;
+		font-size: 2rem;
+		cursor: pointer;
+		padding: 0;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.modal-body {
+		padding: 1.5rem;
+	}
+
+	.current-price {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: rgba(255, 255, 255, 0.1);
+		padding: 1rem;
+		border-radius: 8px;
+		margin-bottom: 1.5rem;
+	}
+
+	.form-group {
+		margin-bottom: 1.5rem;
+	}
+
+	.form-group label {
+		display: block;
+		margin-bottom: 0.5rem;
+		color: #d4af37;
+		font-weight: 600;
+	}
+
+	.form-group input {
+		width: 100%;
+		padding: 1rem;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.1);
+		color: #ffffff;
+		font-size: 1rem;
+	}
+
+	.form-group input:focus {
+		outline: none;
+		border-color: #d4af37;
+	}
+
+	.message {
+		margin-top: 1rem;
+		padding: 1rem;
+		border-radius: 8px;
+		text-align: center;
+		font-weight: 600;
+		display: none;
+	}
+
+	.message.success {
+		background: rgba(34, 197, 94, 0.2);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+		color: #22c55e;
+	}
+
+	.message.error {
+		background: rgba(239, 68, 68, 0.2);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+		color: #ef4444;
+	}
+
+	@media (max-width: 768px) {
+		.auctions-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.modal-content {
+			margin: 5% auto;
+			width: 95%;
+		}
+
+		.prompt-buttons {
+			flex-direction: column;
+		}
+	}
+</style>
+
+<script>
+	let currentMachineId = null;
+	let userToken = null;
+	let isLoggedIn = false;
+
+	// Check if user is logged in
+	function checkAuth() {
+		userToken = localStorage.getItem('userToken');
+		isLoggedIn = !!userToken;
+		return isLoggedIn;
+	}
+
+	// Load auctions
+	async function loadAuctions() {
+		try {
+			const response = await fetch('/api/machines');
+			const data = await response.json();
+
+			if (data.success) {
+				displayAuctions(data.machines);
+			} else {
+				showError('Error al cargar las subastas');
+			}
+		} catch (error) {
+			showError('Error de conexión');
+		}
+	}
+
+	// Display auctions
+	function displayAuctions(machines) {
+		const grid = document.getElementById('auctionsGrid');
+		
+		if (machines.length === 0) {
+			grid.innerHTML = `
+				<div class="loading">
+					<p>No hay subastas activas en este momento.</p>
+				</div>
+			`;
+			return;
+		}
+
+		const isLoggedIn = checkAuth();
+
+		grid.innerHTML = machines.map(machine => `
+			<div class="auction-card">
+				<img src="${machine.image_url || '/images/machining_center_1.jpg'}" alt="${machine.name}" class="auction-image" />
+				<div class="auction-content">
+					<h3 class="auction-title">${machine.name}</h3>
+					<p class="auction-description">${machine.description || 'Maquinaria industrial de alta calidad'}</p>
+					<div class="auction-prices">
+						<div class="price-info">
+							<div class="price-label">Precio inicial</div>
+							<div class="price">$${machine.initial_price.toLocaleString()}</div>
+						</div>
+						<div class="price-info">
+							<div class="price-label">Precio actual</div>
+							<div class="price">$${machine.current_price.toLocaleString()}</div>
+						</div>
+					</div>
+					${isLoggedIn ? 
+						`<button class="bid-button" onclick="openBidModal(${machine.id}, '${machine.name}', ${machine.current_price})">
+							Realizar Puja
+						</button>` :
+						`<button class="bid-button" onclick="showLoginPrompt()">
+							Iniciar Sesión para Pujar
+						</button>`
+					}
+				</div>
+			</div>
+		`).join('');
+	}
+
+	// Show login prompt
+	function showLoginPrompt() {
+		document.getElementById('loginPrompt').style.display = 'block';
+		document.getElementById('auctionsGrid').style.display = 'none';
+	}
+
+	// Open bid modal
+	function openBidModal(machineId, machineName, currentPrice) {
+		currentMachineId = machineId;
+		document.getElementById('modalTitle').textContent = `Pujar por ${machineName}`;
+		document.getElementById('currentPrice').textContent = `$${currentPrice.toLocaleString()}`;
+		document.getElementById('bidAmount').min = currentPrice + 0.01;
+		document.getElementById('bidAmount').value = '';
+		document.getElementById('bidModal').style.display = 'block';
+	}
+
+	// Close bid modal
+	function closeBidModal() {
+		document.getElementById('bidModal').style.display = 'none';
+		currentMachineId = null;
+	}
+
+	// Handle bid form submission
+	document.getElementById('bidForm').addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const submitBtn = document.getElementById('bidSubmitBtn');
+		const messageDiv = document.getElementById('bidMessage');
+		const bidAmount = parseFloat(document.getElementById('bidAmount').value);
+
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Realizando puja...';
+
+		try {
+			const response = await fetch('/api/bids', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${userToken}`
+				},
+				body: JSON.stringify({
+					machine_id: currentMachineId,
+					amount: bidAmount
+				}),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				showBidMessage('¡Puja realizada exitosamente!', 'success');
+				setTimeout(() => {
+					closeBidModal();
+					loadAuctions(); // Reload to show updated prices
+				}, 2000);
+			} else {
+				showBidMessage(data.error || 'Error al realizar la puja', 'error');
+			}
+		} catch (error) {
+			showBidMessage('Error de conexión. Intenta nuevamente.', 'error');
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = 'Realizar Puja';
+		}
+	});
+
+	function showBidMessage(text, type) {
+		const messageDiv = document.getElementById('bidMessage');
+		messageDiv.textContent = text;
+		messageDiv.className = `message ${type}`;
+		messageDiv.style.display = 'block';
+		
+		setTimeout(() => {
+			messageDiv.style.display = 'none';
+		}, 5000);
+	}
+
+	function showError(message) {
+		const grid = document.getElementById('auctionsGrid');
+		grid.innerHTML = `
+			<div class="loading">
+				<p style="color: #ef4444;">${message}</p>
+			</div>
+		`;
+	}
+
+	// Close modal when clicking outside
+	window.onclick = function(event) {
+		const modal = document.getElementById('bidModal');
+		if (event.target === modal) {
+			closeBidModal();
+		}
+	}
+
+	// Make functions global
+	window.openBidModal = openBidModal;
+	window.closeBidModal = closeBidModal;
+	window.showLoginPrompt = showLoginPrompt;
+
+	// Load auctions on page load
+	document.addEventListener('DOMContentLoaded', loadAuctions);
+
+	// Auto-refresh auctions every 30 seconds
+	setInterval(loadAuctions, 30000);
+</script>
+

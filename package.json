@@ -1,0 +1,17 @@
+{
+  "name": "numerica-auction",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.12.8",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

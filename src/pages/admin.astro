@@ -1,0 +1,535 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Panel de Administración - Numérica">
+	<div class="admin-container">
+		<div class="container">
+			<!-- Login Form -->
+			<div id="adminLogin" class="admin-login">
+				<div class="auth-card">
+					<div class="auth-header">
+						<h1>Panel de Administración</h1>
+						<p>Acceso solo para administradores</p>
+					</div>
+
+					<form id="adminLoginForm" class="auth-form">
+						<div class="form-group">
+							<label for="username">Usuario</label>
+							<input type="text" id="username" name="username" required />
+						</div>
+
+						<div class="form-group">
+							<label for="password">Contraseña</label>
+							<input type="password" id="password" name="password" required />
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-full" id="loginSubmitBtn">
+							Iniciar Sesión
+						</button>
+					</form>
+
+					<div id="loginMessage" class="message"></div>
+				</div>
+			</div>
+
+			<!-- Admin Panel -->
+			<div id="adminPanel" class="admin-panel" style="display: none;">
+				<div class="panel-header">
+					<h1>Panel de Administración</h1>
+					<button class="btn btn-secondary" onclick="adminLogout()">Cerrar Sesión</button>
+				</div>
+
+				<div class="panel-content">
+					<div class="panel-section">
+						<h2>Agregar Nueva Máquina</h2>
+						<form id="addMachineForm" class="machine-form">
+							<div class="form-row">
+								<div class="form-group">
+									<label for="machineName">Nombre de la Máquina</label>
+									<input type="text" id="machineName" name="machineName" required />
+								</div>
+								<div class="form-group">
+									<label for="initialPrice">Precio Inicial</label>
+									<input type="number" id="initialPrice" name="initialPrice" step="0.01" required />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="machineDescription">Descripción</label>
+								<textarea id="machineDescription" name="machineDescription" rows="3"></textarea>
+							</div>
+
+							<div class="form-group">
+								<label for="machineImage">Imagen</label>
+								<select id="machineImage" name="machineImage">
+									<option value="/images/machining_center_1.jpg">Centro de Maquinado 1</option>
+									<option value="/images/machining_center_2.jpg">Centro de Maquinado 2</option>
+									<option value="/images/cnc_lathe_1.jpg">Torno CNC</option>
+									<option value="/images/milling_machine_1.jpg">Fresadora</option>
+								</select>
+							</div>
+
+							<button type="submit" class="btn btn-primary" id="addMachineBtn">
+								Agregar Máquina
+							</button>
+						</form>
+
+						<div id="machineMessage" class="message"></div>
+					</div>
+
+					<div class="panel-section">
+						<h2>Máquinas Activas</h2>
+						<div id="machinesList" class="machines-list">
+							<div class="loading">
+								<div class="spinner"></div>
+								<p>Cargando máquinas...</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.admin-container {
+		padding: 2rem 0;
+		min-height: calc(100vh - 160px);
+	}
+
+	.admin-login {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 60vh;
+	}
+
+	.auth-card {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 3rem;
+		max-width: 500px;
+		width: 100%;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.auth-header {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
+
+	.auth-header h1 {
+		font-size: 2.5rem;
+		margin-bottom: 0.5rem;
+		color: #d4af37;
+	}
+
+	.auth-header p {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 1.1rem;
+	}
+
+	.auth-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.form-group label {
+		font-weight: 600;
+		color: #d4af37;
+	}
+
+	.form-group input,
+	.form-group textarea,
+	.form-group select {
+		padding: 1rem;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.1);
+		color: #ffffff;
+		font-size: 1rem;
+		transition: border-color 0.3s ease;
+	}
+
+	.form-group input:focus,
+	.form-group textarea:focus,
+	.form-group select:focus {
+		outline: none;
+		border-color: #d4af37;
+	}
+
+	.form-group textarea {
+		resize: vertical;
+		min-height: 80px;
+	}
+
+	.btn-full {
+		width: 100%;
+		padding: 1rem;
+		font-size: 1.1rem;
+		margin-top: 1rem;
+	}
+
+	.admin-panel {
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+
+	.panel-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 3rem;
+		padding-bottom: 1rem;
+		border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.panel-header h1 {
+		font-size: 2.5rem;
+		color: #d4af37;
+	}
+
+	.panel-content {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.panel-section {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 2rem;
+	}
+
+	.panel-section h2 {
+		color: #d4af37;
+		margin-bottom: 1.5rem;
+		font-size: 1.8rem;
+	}
+
+	.machine-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.form-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.machines-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.machine-card {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		padding: 1.5rem;
+		transition: transform 0.3s ease;
+	}
+
+	.machine-card:hover {
+		transform: translateY(-4px);
+	}
+
+	.machine-card h3 {
+		color: #d4af37;
+		margin-bottom: 0.5rem;
+	}
+
+	.machine-card p {
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 0.5rem;
+	}
+
+	.machine-prices {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.price-info {
+		text-align: center;
+	}
+
+	.price-label {
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.6);
+		margin-bottom: 0.25rem;
+	}
+
+	.price {
+		font-size: 1.1rem;
+		font-weight: bold;
+		color: #d4af37;
+	}
+
+	.loading {
+		grid-column: 1 / -1;
+		text-align: center;
+		padding: 2rem;
+	}
+
+	.spinner {
+		width: 40px;
+		height: 40px;
+		border: 3px solid rgba(212, 175, 55, 0.3);
+		border-top: 3px solid #d4af37;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+		margin: 0 auto 1rem;
+	}
+
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+
+	.message {
+		margin-top: 1rem;
+		padding: 1rem;
+		border-radius: 8px;
+		text-align: center;
+		font-weight: 600;
+		display: none;
+	}
+
+	.message.success {
+		background: rgba(34, 197, 94, 0.2);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+		color: #22c55e;
+	}
+
+	.message.error {
+		background: rgba(239, 68, 68, 0.2);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+		color: #ef4444;
+	}
+
+	@media (max-width: 768px) {
+		.panel-header {
+			flex-direction: column;
+			gap: 1rem;
+			text-align: center;
+		}
+
+		.form-row {
+			grid-template-columns: 1fr;
+		}
+
+		.machines-list {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script>
+	let adminToken = null;
+
+	// Check if admin is logged in
+	function checkAdminAuth() {
+		adminToken = localStorage.getItem('adminToken');
+		if (adminToken) {
+			showAdminPanel();
+			loadMachines();
+		}
+	}
+
+	// Handle admin login
+	document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const submitBtn = document.getElementById('loginSubmitBtn');
+		const messageDiv = document.getElementById('loginMessage');
+		
+		const formData = new FormData(e.target);
+		const username = formData.get('username');
+		const password = formData.get('password');
+
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Iniciando sesión...';
+
+		try {
+			const response = await fetch('/api/admin/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ username, password }),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				localStorage.setItem('adminToken', data.token);
+				adminToken = data.token;
+				showMessage('loginMessage', 'Acceso concedido. Cargando panel...', 'success');
+				setTimeout(() => {
+					showAdminPanel();
+					loadMachines();
+				}, 1500);
+			} else {
+				showMessage('loginMessage', data.error || 'Credenciales inválidas', 'error');
+			}
+		} catch (error) {
+			showMessage('loginMessage', 'Error de conexión. Intenta nuevamente.', 'error');
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = 'Iniciar Sesión';
+		}
+	});
+
+	// Show admin panel
+	function showAdminPanel() {
+		document.getElementById('adminLogin').style.display = 'none';
+		document.getElementById('adminPanel').style.display = 'block';
+	}
+
+	// Admin logout
+	function adminLogout() {
+		localStorage.removeItem('adminToken');
+		adminToken = null;
+		document.getElementById('adminLogin').style.display = 'block';
+		document.getElementById('adminPanel').style.display = 'none';
+	}
+
+	// Handle add machine form
+	document.getElementById('addMachineForm').addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const submitBtn = document.getElementById('addMachineBtn');
+		const messageDiv = document.getElementById('machineMessage');
+		
+		const formData = new FormData(e.target);
+		const machineData = {
+			name: formData.get('machineName'),
+			description: formData.get('machineDescription'),
+			image_url: formData.get('machineImage'),
+			initial_price: parseFloat(formData.get('initialPrice'))
+		};
+
+		submitBtn.disabled = true;
+		submitBtn.textContent = 'Agregando...';
+
+		try {
+			const response = await fetch('/api/machines', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${adminToken}`
+				},
+				body: JSON.stringify(machineData),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				showMessage('machineMessage', 'Máquina agregada exitosamente', 'success');
+				e.target.reset();
+				loadMachines(); // Reload machines list
+			} else {
+				showMessage('machineMessage', data.error || 'Error al agregar la máquina', 'error');
+			}
+		} catch (error) {
+			showMessage('machineMessage', 'Error de conexión. Intenta nuevamente.', 'error');
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = 'Agregar Máquina';
+		}
+	});
+
+	// Load machines
+	async function loadMachines() {
+		try {
+			const response = await fetch('/api/machines');
+			const data = await response.json();
+
+			if (data.success) {
+				displayMachines(data.machines);
+			} else {
+				showMachinesError('Error al cargar las máquinas');
+			}
+		} catch (error) {
+			showMachinesError('Error de conexión');
+		}
+	}
+
+	// Display machines
+	function displayMachines(machines) {
+		const list = document.getElementById('machinesList');
+		
+		if (machines.length === 0) {
+			list.innerHTML = `
+				<div class="loading">
+					<p>No hay máquinas registradas.</p>
+				</div>
+			`;
+			return;
+		}
+
+		list.innerHTML = machines.map(machine => `
+			<div class="machine-card">
+				<h3>${machine.name}</h3>
+				<p>${machine.description || 'Sin descripción'}</p>
+				<p><strong>Estado:</strong> ${machine.status === 'active' ? 'Activa' : 'Inactiva'}</p>
+				<div class="machine-prices">
+					<div class="price-info">
+						<div class="price-label">Precio inicial</div>
+						<div class="price">$${machine.initial_price.toLocaleString()}</div>
+					</div>
+					<div class="price-info">
+						<div class="price-label">Precio actual</div>
+						<div class="price">$${machine.current_price.toLocaleString()}</div>
+					</div>
+				</div>
+			</div>
+		`).join('');
+	}
+
+	function showMachinesError(message) {
+		const list = document.getElementById('machinesList');
+		list.innerHTML = `
+			<div class="loading">
+				<p style="color: #ef4444;">${message}</p>
+			</div>
+		`;
+	}
+
+	function showMessage(elementId, text, type) {
+		const messageDiv = document.getElementById(elementId);
+		messageDiv.textContent = text;
+		messageDiv.className = `message ${type}`;
+		messageDiv.style.display = 'block';
+		
+		setTimeout(() => {
+			messageDiv.style.display = 'none';
+		}, 5000);
+	}
+
+	// Make functions global
+	window.adminLogout = adminLogout;
+
+	// Check auth on page load
+	document.addEventListener('DOMContentLoaded', checkAdminAuth);
+</script>
+

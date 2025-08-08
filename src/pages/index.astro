@@ -1,0 +1,213 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Numérica - Subastas de Maquinaria Industrial">
+	<div class="hero">
+		<div class="container">
+			<div class="hero-content">
+				<h1 class="hero-title">Subastas de Maquinaria Industrial</h1>
+				<p class="hero-subtitle">
+					Encuentra las mejores máquinas CNC, centros de maquinado, tornos y fresadoras 
+					en nuestra plataforma de subastas en línea.
+				</p>
+				<div class="hero-buttons">
+					<a href="/subastas" class="btn btn-primary btn-large">Ver Subastas Activas</a>
+					<a href="/register" class="btn btn-secondary btn-large">Registrarse</a>
+				</div>
+			</div>
+			<div class="hero-image">
+				<img src="/images/machining_center_1.jpg" alt="Centro de Maquinado" />
+			</div>
+		</div>
+	</div>
+
+	<section class="features">
+		<div class="container">
+			<h2 class="section-title">¿Por qué elegir Numérica?</h2>
+			<div class="features-grid">
+				<div class="feature-card">
+					<div class="feature-icon">🏭</div>
+					<h3>Maquinaria Especializada</h3>
+					<p>Centros de maquinado CNC, tornos, fresadoras y equipos industriales de alta calidad.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">⚡</div>
+					<h3>Subastas en Tiempo Real</h3>
+					<p>Sistema de pujas dinámico que actualiza los precios instantáneamente.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">🔒</div>
+					<h3>Seguro y Confiable</h3>
+					<p>Plataforma segura con registro verificado y transacciones protegidas.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">📱</div>
+					<h3>Fácil de Usar</h3>
+					<p>Interfaz intuitiva optimizada para dispositivos móviles y escritorio.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta">
+		<div class="container">
+			<div class="cta-content">
+				<h2>¿Listo para participar?</h2>
+				<p>Únete a nuestra comunidad de compradores y encuentra la maquinaria que necesitas.</p>
+				<a href="/register" class="btn btn-primary btn-large">Comenzar Ahora</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: 4rem 0;
+		background: linear-gradient(135deg, rgba(26, 35, 50, 0.9) 0%, rgba(45, 55, 72, 0.9) 100%);
+	}
+
+	.hero .container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+		align-items: center;
+	}
+
+	.hero-title {
+		font-size: 3.5rem;
+		font-weight: bold;
+		margin-bottom: 1.5rem;
+		background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		line-height: 1.2;
+	}
+
+	.hero-subtitle {
+		font-size: 1.25rem;
+		color: rgba(255, 255, 255, 0.8);
+		margin-bottom: 2rem;
+		line-height: 1.6;
+	}
+
+	.hero-buttons {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.btn-large {
+		padding: 1rem 2rem;
+		font-size: 1.1rem;
+	}
+
+	.hero-image img {
+		width: 100%;
+		height: 400px;
+		object-fit: cover;
+		border-radius: 16px;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.features {
+		padding: 6rem 0;
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.section-title {
+		text-align: center;
+		font-size: 2.5rem;
+		margin-bottom: 3rem;
+		color: #d4af37;
+	}
+
+	.features-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
+	}
+
+	.feature-card {
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 2rem;
+		text-align: center;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.feature-card:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+	}
+
+	.feature-icon {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.feature-card h3 {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #d4af37;
+	}
+
+	.feature-card p {
+		color: rgba(255, 255, 255, 0.8);
+		line-height: 1.6;
+	}
+
+	.cta {
+		padding: 4rem 0;
+		background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+		color: #1a2332;
+	}
+
+	.cta-content {
+		text-align: center;
+	}
+
+	.cta h2 {
+		font-size: 2.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.cta p {
+		font-size: 1.25rem;
+		margin-bottom: 2rem;
+		opacity: 0.8;
+	}
+
+	.cta .btn-primary {
+		background: #1a2332;
+		color: #d4af37;
+	}
+
+	.cta .btn-primary:hover {
+		background: #2d3748;
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(26, 35, 50, 0.3);
+	}
+
+	@media (max-width: 768px) {
+		.hero .container {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.hero-title {
+			font-size: 2.5rem;
+		}
+
+		.hero-buttons {
+			flex-direction: column;
+		}
+
+		.features-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
