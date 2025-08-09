@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { bidQueries, machineQueries } from '../../../lib/database.js';
+import { sql } from '../../../lib/db.js';
 
 const JWT_SECRET = 'numerica-auction-secret-key-2025';
 
@@ -35,13 +35,17 @@ export async function POST({ request }) {
     }
 
     // Get current machine data
-    const machine = machineQueries.findById.get(machine_id);
-    if (!machine) {
+    const machines = await sql`
+      SELECT * FROM machines WHERE id = ${machine_id}
+    `;
+    if (machines.length === 0) {
       return new Response(JSON.stringify({ error: 'Máquina no encontrada' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    const machine = machines[0];
 
     if (machine.status !== 'active') {
       return new Response(JSON.stringify({ error: 'La subasta no está activa' }), {
@@ -51,9 +55,9 @@ export async function POST({ request }) {
     }
 
     // Check if bid is higher than current price
-    if (amount <= machine.current_price) {
+    if (amount <= parseFloat(machine.current_price)) {
       return new Response(JSON.stringify({ 
-        error: `La puja debe ser mayor a $${machine.current_price.toLocaleString()}` 
+        error: `La puja debe ser mayor a $${parseFloat(machine.current_price).toLocaleString()}` 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -61,15 +65,21 @@ export async function POST({ request }) {
     }
 
     // Create bid
-    const result = bidQueries.create.run(machine_id, decoded.userId, amount);
+    const result = await sql`
+      INSERT INTO bids (machine_id, user_id, amount) 
+      VALUES (${machine_id}, ${decoded.userId}, ${amount})
+      RETURNING id
+    `;
 
     // Update machine current price
-    machineQueries.updatePrice.run(amount, machine_id);
+    await sql`
+      UPDATE machines SET current_price = ${amount} WHERE id = ${machine_id}
+    `;
 
     return new Response(JSON.stringify({ 
       success: true,
       message: 'Puja realizada exitosamente',
-      bidId: result.lastInsertRowid,
+      bidId: result[0].id,
       newPrice: amount
     }), {
       status: 201,
@@ -96,7 +106,13 @@ export async function GET({ url }) {
       });
     }
 
-    const bids = bidQueries.findByMachine.all(machineId);
+    const bids = await sql`
+      SELECT b.*, u.name as user_name, u.phone as user_phone 
+      FROM bids b 
+      JOIN users u ON b.user_id = u.id 
+      WHERE b.machine_id = ${machineId}
+      ORDER BY b.amount DESC, b.created_at ASC
+    `;
     
     return new Response(JSON.stringify({ 
       success: true,

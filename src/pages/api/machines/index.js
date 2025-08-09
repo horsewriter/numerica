@@ -1,11 +1,15 @@
 import jwt from 'jsonwebtoken';
-import { machineQueries } from '../../../lib/database.js';
+import { sql } from '../../../lib/db.js';
 
 const JWT_SECRET = 'numerica-auction-admin-secret-key-2025';
 
 export async function GET() {
   try {
-    const machines = machineQueries.findAll.all('active');
+    const machines = await sql`
+      SELECT * FROM machines 
+      WHERE status = 'active' 
+      ORDER BY current_price DESC
+    `;
     
     return new Response(JSON.stringify({ 
       success: true,
@@ -57,19 +61,16 @@ export async function POST({ request }) {
       });
     }
 
-    const result = machineQueries.create.run(
-      name, 
-      description || '', 
-      image_url || '', 
-      initial_price, 
-      initial_price,
-      ends_at || null
-    );
+    const result = await sql`
+      INSERT INTO machines (name, description, image_url, initial_price, current_price, ends_at) 
+      VALUES (${name}, ${description || ''}, ${image_url || ''}, ${initial_price}, ${initial_price}, ${ends_at || null})
+      RETURNING id
+    `;
 
     return new Response(JSON.stringify({ 
       success: true,
       message: 'Máquina creada exitosamente',
-      machineId: result.lastInsertRowid
+      machineId: result[0].id
     }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' }

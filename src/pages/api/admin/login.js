@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { adminQueries } from '../../../lib/database.js';
+import { sql } from '../../../lib/db.js';
 
 const JWT_SECRET = 'numerica-auction-admin-secret-key-2025';
 
@@ -15,13 +15,17 @@ export async function POST({ request }) {
     }
 
     // Find admin user
-    const admin = adminQueries.findByUsername.get(username);
-    if (!admin || admin.password !== password) {
+    const admins = await sql`
+      SELECT * FROM admin_users WHERE username = ${username}
+    `;
+    if (admins.length === 0 || admins[0].password !== password) {
       return new Response(JSON.stringify({ error: 'Credenciales inválidas' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    const admin = admins[0];
 
     // Generate JWT token
     const token = jwt.sign(

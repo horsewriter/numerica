@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { userQueries } from '../../../lib/database.js';
+import { sql } from '../../../lib/db.js';
 
 export async function POST({ request }) {
   try {
@@ -13,8 +13,10 @@ export async function POST({ request }) {
     }
 
     // Check if user already exists
-    const existingUser = userQueries.findByPhone.get(phone);
-    if (existingUser) {
+    const existingUsers = await sql`
+      SELECT id FROM users WHERE phone = ${phone}
+    `;
+    if (existingUsers.length > 0) {
       return new Response(JSON.stringify({ error: 'El número de teléfono ya está registrado' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -25,12 +27,16 @@ export async function POST({ request }) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const result = userQueries.create.run(name, phone, hashedPassword);
+    const result = await sql`
+      INSERT INTO users (name, phone, password) 
+      VALUES (${name}, ${phone}, ${hashedPassword})
+      RETURNING id
+    `;
 
     return new Response(JSON.stringify({ 
       success: true, 
       message: 'Usuario registrado exitosamente',
-      userId: result.lastInsertRowid
+      userId: result[0].id
     }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' }

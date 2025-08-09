@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { userQueries } from '../../../lib/database.js';
+import { sql } from '../../../lib/db.js';
 
 const JWT_SECRET = 'numerica-auction-secret-key-2025';
 
@@ -16,13 +16,17 @@ export async function POST({ request }) {
     }
 
     // Find user
-    const user = userQueries.findByPhone.get(phone);
-    if (!user) {
+    const users = await sql`
+      SELECT * FROM users WHERE phone = ${phone}
+    `;
+    if (users.length === 0) {
       return new Response(JSON.stringify({ error: 'Credenciales inválidas' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    const user = users[0];
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
