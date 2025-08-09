@@ -10,7 +10,9 @@ export async function GET() {
       WHERE status = 'active' 
       ORDER BY current_price DESC
     `;
-    
+
+    console.log('Machines found:', machines.length);
+
     return new Response(JSON.stringify({ 
       success: true,
       machines 
@@ -21,7 +23,10 @@ export async function GET() {
 
   } catch (error) {
     console.error('Get machines error:', error);
-    return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {
+    return new Response(JSON.stringify({ 
+      error: 'Error interno del servidor',
+      details: error.message
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
