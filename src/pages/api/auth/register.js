@@ -1,5 +1,11 @@
-import bcrypt from 'bcryptjs';
+import { scryptSync, randomBytes } from 'crypto';
 import { sql } from '../../../lib/db.js';
+
+function hashPassword(password) {
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
 
 export async function POST({ request }) {
   try {
@@ -12,7 +18,7 @@ export async function POST({ request }) {
       });
     }
 
-    // Check if user already exists
+    // Verificar si usuario existe
     const existingUsers = await sql`
       SELECT id FROM users WHERE phone = ${phone}
     `;
@@ -23,10 +29,10 @@ export async function POST({ request }) {
       });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hashear la contraseña con crypto
+    const hashedPassword = hashPassword(password);
 
-    // Create user
+    // Crear usuario en BD
     const result = await sql`
       INSERT INTO users (name, phone, password) 
       VALUES (${name}, ${phone}, ${hashedPassword})
@@ -50,4 +56,3 @@ export async function POST({ request }) {
     });
   }
 }
-
