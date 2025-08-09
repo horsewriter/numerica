@@ -1,11 +1,11 @@
 import { neon } from '@neondatabase/serverless';
+import { scryptSync, randomBytes } from 'crypto';
 
 export const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-// Initialize database tables
+// Inicializar tablas
 export async function initializeDatabase() {
   try {
-    // Create users table
     await sql`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -16,7 +16,6 @@ export async function initializeDatabase() {
       )
     `;
 
-    // Create machines table (renamed from products for consistency)
     await sql`
       CREATE TABLE IF NOT EXISTS machines (
         id SERIAL PRIMARY KEY,
@@ -31,7 +30,6 @@ export async function initializeDatabase() {
       )
     `;
 
-    // Create products table for API compatibility
     await sql`
       CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
@@ -43,7 +41,6 @@ export async function initializeDatabase() {
       )
     `;
 
-    // Create bids table
     await sql`
       CREATE TABLE IF NOT EXISTS bids (
         id SERIAL PRIMARY KEY,
@@ -56,7 +53,6 @@ export async function initializeDatabase() {
       )
     `;
 
-    // Create admin_users table
     await sql`
       CREATE TABLE IF NOT EXISTS admin_users (
         id SERIAL PRIMARY KEY,
@@ -72,40 +68,49 @@ export async function initializeDatabase() {
   }
 }
 
-// Seed initial data
+// Función para hashear password con crypto.scrypt + salt
+function hashPassword(password) {
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
+
+// Seed datos iniciales
 export async function seedDatabase() {
   try {
-    // Check if admin user exists
+    // Admin user con password hasheado
     const adminExists = await sql`
       SELECT COUNT(*) as count FROM admin_users WHERE username = 'admin'
     `;
-    
+
     if (adminExists[0].count === '0') {
+      const hashedAdminPassword = hashPassword('admin123');
       await sql`
         INSERT INTO admin_users (username, password) 
-        VALUES ('admin', 'admin123')
+        VALUES ('admin', ${hashedAdminPassword})
       `;
-      console.log('Admin user created');
+      console.log('Admin user creado con password hasheado');
     }
 
-    // Check if test user exists
+    // Usuario de prueba
     const userExists = await sql`
       SELECT COUNT(*) as count FROM users WHERE phone = '5551234567'
     `;
-    
+
     if (userExists[0].count === '0') {
+      // Ejemplo sin hashear (mejor agregar hash real en producción)
       await sql`
         INSERT INTO users (name, phone, password) 
-        VALUES ('Usuario de Prueba', '5551234567', '$2a$10$example.hash.for.testing')
+        VALUES ('Usuario de Prueba', '5551234567', 'password-en-texto-o-hash-aqui')
       `;
-      console.log('Test user created');
+      console.log('Usuario de prueba creado');
     }
 
-    // Check if machines exist
+    // Máquinas de prueba
     const machinesExist = await sql`
       SELECT COUNT(*) as count FROM machines
     `;
-    
+
     if (machinesExist[0].count === '0') {
       await sql`
         INSERT INTO machines (name, description, image_url, initial_price, current_price) VALUES
@@ -114,14 +119,14 @@ export async function seedDatabase() {
         ('Fresadora Universal Bridgeport', 'Fresadora manual de alta calidad con mesa de trabajo amplia. Excelente para trabajos de precisión.', '/images/milling_machine_1.jpg', 25000, 25000),
         ('Centro de Maquinado DMG Mori', 'Centro de maquinado de 5 ejes con tecnología avanzada. Ideal para industria aeroespacial.', '/images/machining_center_2.jpg', 120000, 125000)
       `;
-      console.log('Test machines created');
+      console.log('Máquinas de prueba creadas');
     }
 
-    // Check if products exist
+    // Productos de prueba
     const productsExist = await sql`
       SELECT COUNT(*) as count FROM products
     `;
-    
+
     if (productsExist[0].count === '0') {
       await sql`
         INSERT INTO products (name, description, price) VALUES
@@ -130,7 +135,7 @@ export async function seedDatabase() {
         ('Fresadora Universal', 'Fresadora manual de alta calidad', 25000),
         ('Centro de Maquinado 5 Ejes', 'Centro de maquinado avanzado de 5 ejes', 120000)
       `;
-      console.log('Test products created');
+      console.log('Productos de prueba creados');
     }
 
     console.log('Database seeded successfully');
