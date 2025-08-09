@@ -2,84 +2,182 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Registro - Numérica">
-	<div class="auth-container">
+<Layout title="Crear Cuenta - Numérica">
+	<div class="auth-page">
 		<div class="container">
-			<div class="auth-card">
-				<div class="auth-header">
-					<h1>Crear Cuenta</h1>
-					<p>Regístrate para participar en las subastas</p>
+			<div class="auth-container">
+				<div class="auth-card card">
+					<div class="card-header">
+						<h1 class="auth-title">Crear Cuenta</h1>
+						<p class="auth-subtitle">Regístrate para participar en las subastas de maquinaria industrial</p>
+					</div>
+
+					<div class="card-body">
+						<form id="registerForm" class="auth-form">
+							<div class="form-group">
+								<label for="name" class="form-label">Nombre Completo</label>
+								<input 
+									type="text" 
+									id="name" 
+									name="name" 
+									required 
+									placeholder="Ej: Juan Pérez"
+									class="form-input"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="phone" class="form-label">Número de Teléfono</label>
+								<input 
+									type="tel" 
+									id="phone" 
+									name="phone" 
+									required 
+									placeholder="Ej: 5551234567" 
+									class="form-input"
+								/>
+								<small class="form-help">Este será tu nombre de usuario para iniciar sesión</small>
+							</div>
+
+							<div class="form-group">
+								<label for="password" class="form-label">Contraseña</label>
+								<input 
+									type="password" 
+									id="password" 
+									name="password" 
+									required 
+									minlength="6" 
+									class="form-input"
+								/>
+								<small class="form-help">Mínimo 6 caracteres</small>
+							</div>
+
+							<div class="form-group">
+								<label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+								<input 
+									type="password" 
+									id="confirmPassword" 
+									name="confirmPassword" 
+									required 
+									minlength="6" 
+									class="form-input"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label class="checkbox-label">
+									<input type="checkbox" id="terms" required class="checkbox-input" />
+									<span class="checkbox-text">
+										Acepto los <a href="#" class="auth-link">términos y condiciones</a> 
+										y la <a href="#" class="auth-link">política de privacidad</a>
+									</span>
+								</label>
+							</div>
+
+							<button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">
+								Crear Cuenta
+							</button>
+						</form>
+
+						<div id="message" class="alert" style="display: none;"></div>
+					</div>
+
+					<div class="card-footer">
+						<p class="auth-footer-text">
+							¿Ya tienes cuenta? 
+							<a href="/login" class="auth-link">Iniciar sesión</a>
+						</p>
+					</div>
 				</div>
 
-				<form id="registerForm" class="auth-form">
-					<div class="form-group">
-						<label for="name">Nombre Completo</label>
-						<input type="text" id="name" name="name" required />
+				<div class="auth-help">
+					<div class="help-card card">
+						<div class="card-body">
+							<h3>¿Por qué registrarse?</h3>
+							<ul class="benefits-list">
+								<li>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 12l2 2 4-4"/>
+										<circle cx="12" cy="12" r="10"/>
+									</svg>
+									Participa en subastas en tiempo real
+								</li>
+								<li>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 12l2 2 4-4"/>
+										<circle cx="12" cy="12" r="10"/>
+									</svg>
+									Acceso a maquinaria industrial certificada
+								</li>
+								<li>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 12l2 2 4-4"/>
+										<circle cx="12" cy="12" r="10"/>
+									</svg>
+									Historial de pujas y transacciones
+								</li>
+								<li>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 12l2 2 4-4"/>
+										<circle cx="12" cy="12" r="10"/>
+									</svg>
+									Notificaciones de nuevas subastas
+								</li>
+							</ul>
+						</div>
 					</div>
 
-					<div class="form-group">
-						<label for="phone">Número de Teléfono</label>
-						<input type="tel" id="phone" name="phone" required placeholder="Ej: 5551234567" />
+					<div class="security-card card">
+						<div class="card-body">
+							<h3>Seguridad</h3>
+							<p class="security-text">
+								Tus datos están protegidos con encriptación de nivel bancario. 
+								Nunca compartimos tu información personal con terceros.
+							</p>
+						</div>
 					</div>
-
-					<div class="form-group">
-						<label for="password">Contraseña</label>
-						<input type="password" id="password" name="password" required minlength="6" />
-					</div>
-
-					<div class="form-group">
-						<label for="confirmPassword">Confirmar Contraseña</label>
-						<input type="password" id="confirmPassword" name="confirmPassword" required minlength="6" />
-					</div>
-
-					<button type="submit" class="btn btn-primary btn-full" id="submitBtn">
-						Registrarse
-					</button>
-
-					<div class="auth-footer">
-						<p>¿Ya tienes cuenta? <a href="/login">Iniciar Sesión</a></p>
-					</div>
-				</form>
-
-				<div id="message" class="message"></div>
+				</div>
 			</div>
 		</div>
 	</div>
 </Layout>
 
 <style>
-	.auth-container {
-		min-height: calc(100vh - 160px);
+	.auth-page {
+		min-height: calc(100vh - 140px);
 		display: flex;
 		align-items: center;
 		padding: 2rem 0;
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+	}
+
+	.auth-container {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 2rem;
+		align-items: start;
+		max-width: 900px;
+		margin: 0 auto;
 	}
 
 	.auth-card {
-		background: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		padding: 3rem;
-		max-width: 500px;
-		margin: 0 auto;
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+		width: 100%;
+		max-width: 450px;
 	}
 
-	.auth-header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.auth-header h1 {
-		font-size: 2.5rem;
+	.auth-title {
+		font-size: 1.875rem;
+		font-weight: 700;
+		color: var(--gray-900);
 		margin-bottom: 0.5rem;
-		color: #d4af37;
+		text-align: center;
 	}
 
-	.auth-header p {
-		color: rgba(255, 255, 255, 0.7);
-		font-size: 1.1rem;
+	.auth-subtitle {
+		color: var(--gray-600);
+		text-align: center;
+		margin: 0;
+		line-height: 1.5;
 	}
 
 	.auth-form {
@@ -88,85 +186,105 @@ import Layout from '../layouts/Layout.astro';
 		gap: 1.5rem;
 	}
 
-	.form-group {
+	.form-help {
+		font-size: 0.875rem;
+		color: var(--gray-500);
+		margin-top: 0.25rem;
+	}
+
+	.checkbox-label {
 		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+		align-items: flex-start;
+		gap: 0.75rem;
+		cursor: pointer;
+		font-size: 0.875rem;
+		line-height: 1.5;
 	}
 
-	.form-group label {
-		font-weight: 600;
-		color: #d4af37;
+	.checkbox-input {
+		margin: 0;
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		margin-top: 0.125rem;
 	}
 
-	.form-group input {
-		padding: 1rem;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.1);
-		color: #ffffff;
-		font-size: 1rem;
-		transition: border-color 0.3s ease;
+	.checkbox-text {
+		color: var(--gray-600);
 	}
 
-	.form-group input:focus {
-		outline: none;
-		border-color: #d4af37;
-	}
-
-	.form-group input::placeholder {
-		color: rgba(255, 255, 255, 0.5);
-	}
-
-	.btn-full {
-		width: 100%;
-		padding: 1rem;
-		font-size: 1.1rem;
-		margin-top: 1rem;
-	}
-
-	.auth-footer {
+	.auth-footer-text {
 		text-align: center;
-		margin-top: 2rem;
-		padding-top: 2rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		color: var(--gray-600);
+		margin: 0;
 	}
 
-	.auth-footer a {
-		color: #d4af37;
+	.auth-link {
+		color: var(--primary-color);
 		text-decoration: none;
-		font-weight: 600;
+		font-weight: 500;
 	}
 
-	.auth-footer a:hover {
+	.auth-link:hover {
 		text-decoration: underline;
 	}
 
-	.message {
-		margin-top: 1rem;
-		padding: 1rem;
-		border-radius: 8px;
-		text-align: center;
+	.auth-help {
+		width: 300px;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.help-card h3,
+	.security-card h3 {
+		font-size: 1.125rem;
 		font-weight: 600;
-		display: none;
+		color: var(--gray-900);
+		margin-bottom: 1rem;
 	}
 
-	.message.success {
-		background: rgba(34, 197, 94, 0.2);
-		border: 1px solid rgba(34, 197, 94, 0.3);
-		color: #22c55e;
+	.benefits-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
 	}
 
-	.message.error {
-		background: rgba(239, 68, 68, 0.2);
-		border: 1px solid rgba(239, 68, 68, 0.3);
-		color: #ef4444;
+	.benefits-list li {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.875rem;
+		color: var(--gray-600);
+	}
+
+	.benefits-list svg {
+		color: var(--success-color);
+		flex-shrink: 0;
+	}
+
+	.security-text {
+		font-size: 0.875rem;
+		color: var(--gray-600);
+		line-height: 1.5;
+		margin: 0;
 	}
 
 	@media (max-width: 768px) {
+		.auth-container {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.auth-help {
+			width: 100%;
+		}
+
 		.auth-card {
-			margin: 0 1rem;
-			padding: 2rem;
+			max-width: none;
 		}
 	}
 </style>
@@ -190,8 +308,15 @@ import Layout from '../layouts/Layout.astro';
 			return;
 		}
 
+		// Validate terms acceptance
+		if (!document.getElementById('terms').checked) {
+			showMessage('Debes aceptar los términos y condiciones', 'error');
+			return;
+		}
+
 		submitBtn.disabled = true;
-		submitBtn.textContent = 'Registrando...';
+		submitBtn.textContent = 'Creando cuenta...';
+		messageDiv.style.display = 'none';
 
 		try {
 			const response = await fetch('/api/auth/register', {
@@ -205,30 +330,37 @@ import Layout from '../layouts/Layout.astro';
 			const data = await response.json();
 
 			if (data.success) {
-				showMessage('Registro exitoso. Redirigiendo...', 'success');
+				showMessage('Cuenta creada exitosamente. Redirigiendo...', 'success');
 				setTimeout(() => {
 					window.location.href = '/login';
 				}, 2000);
 			} else {
-				showMessage(data.error || 'Error en el registro', 'error');
+				showMessage(data.error || 'Error al crear la cuenta', 'error');
 			}
 		} catch (error) {
 			showMessage('Error de conexión. Intenta nuevamente.', 'error');
 		} finally {
 			submitBtn.disabled = false;
-			submitBtn.textContent = 'Registrarse';
+			submitBtn.textContent = 'Crear Cuenta';
 		}
 	});
 
 	function showMessage(text, type) {
 		const messageDiv = document.getElementById('message');
 		messageDiv.textContent = text;
-		messageDiv.className = `message ${type}`;
+		messageDiv.className = `alert alert-${type}`;
 		messageDiv.style.display = 'block';
-		
-		setTimeout(() => {
-			messageDiv.style.display = 'none';
-		}, 5000);
 	}
-</script>
 
+	// Real-time password confirmation validation
+	document.getElementById('confirmPassword').addEventListener('input', function() {
+		const password = document.getElementById('password').value;
+		const confirmPassword = this.value;
+		
+		if (confirmPassword && password !== confirmPassword) {
+			this.setCustomValidity('Las contraseñas no coinciden');
+		} else {
+			this.setCustomValidity('');
+		}
+	});
+</script>

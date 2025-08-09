@@ -3,87 +3,144 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Panel de Administración - Numérica">
-	<div class="admin-container">
+	<div class="admin-page">
 		<div class="container">
 			<!-- Login Form -->
 			<div id="adminLogin" class="admin-login">
-				<div class="auth-card">
-					<div class="auth-header">
-						<h1>Panel de Administración</h1>
-						<p>Acceso solo para administradores</p>
+				<div class="login-container">
+					<div class="auth-card card">
+						<div class="card-header">
+							<h1 class="auth-title">Panel de Administración</h1>
+							<p class="auth-subtitle">Acceso restringido para administradores</p>
+						</div>
+
+						<div class="card-body">
+							<form id="adminLoginForm" class="auth-form">
+								<div class="form-group">
+									<label for="username" class="form-label">Usuario</label>
+									<input type="text" id="username" name="username" required class="form-input" />
+								</div>
+
+								<div class="form-group">
+									<label for="password" class="form-label">Contraseña</label>
+									<input type="password" id="password" name="password" required class="form-input" />
+								</div>
+
+								<button type="submit" class="btn btn-primary" style="width: 100%;" id="loginSubmitBtn">
+									Iniciar Sesión
+								</button>
+							</form>
+
+							<div id="loginMessage" class="alert" style="display: none;"></div>
+						</div>
+
+						<div class="card-footer">
+							<div class="admin-credentials">
+								<small class="credentials-text">
+									<strong>Credenciales por defecto:</strong><br>
+									Usuario: admin | Contraseña: admin123
+								</small>
+							</div>
+						</div>
 					</div>
-
-					<form id="adminLoginForm" class="auth-form">
-						<div class="form-group">
-							<label for="username">Usuario</label>
-							<input type="text" id="username" name="username" required />
-						</div>
-
-						<div class="form-group">
-							<label for="password">Contraseña</label>
-							<input type="password" id="password" name="password" required />
-						</div>
-
-						<button type="submit" class="btn btn-primary btn-full" id="loginSubmitBtn">
-							Iniciar Sesión
-						</button>
-					</form>
-
-					<div id="loginMessage" class="message"></div>
 				</div>
 			</div>
 
 			<!-- Admin Panel -->
 			<div id="adminPanel" class="admin-panel" style="display: none;">
 				<div class="panel-header">
-					<h1>Panel de Administración</h1>
-					<button class="btn btn-secondary" onclick="adminLogout()">Cerrar Sesión</button>
+					<div class="header-content">
+						<h1 class="panel-title">Panel de Administración</h1>
+						<p class="panel-subtitle">Gestiona las máquinas y subastas de la plataforma</p>
+					</div>
+					<button class="btn btn-secondary" onclick="adminLogout()">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+							<polyline points="16,17 21,12 16,7"/>
+							<line x1="21" y1="12" x2="9" y2="12"/>
+						</svg>
+						Cerrar Sesión
+					</button>
 				</div>
 
 				<div class="panel-content">
-					<div class="panel-section">
-						<h2>Agregar Nueva Máquina</h2>
-						<form id="addMachineForm" class="machine-form">
-							<div class="form-row">
-								<div class="form-group">
-									<label for="machineName">Nombre de la Máquina</label>
-									<input type="text" id="machineName" name="machineName" required />
+					<div class="panel-grid">
+						<!-- Add Machine Section -->
+						<div class="panel-section">
+							<div class="card">
+								<div class="card-header">
+									<h2 class="section-title">Agregar Nueva Máquina</h2>
+									<p class="section-subtitle">Registra una nueva máquina para subasta</p>
 								</div>
-								<div class="form-group">
-									<label for="initialPrice">Precio Inicial</label>
-									<input type="number" id="initialPrice" name="initialPrice" step="0.01" required />
+								<div class="card-body">
+									<form id="addMachineForm" class="machine-form">
+										<div class="form-row">
+											<div class="form-group">
+												<label for="machineName" class="form-label">Nombre de la Máquina</label>
+												<input type="text" id="machineName" name="machineName" required class="form-input" />
+											</div>
+											<div class="form-group">
+												<label for="initialPrice" class="form-label">Precio Inicial ($)</label>
+												<input type="number" id="initialPrice" name="initialPrice" step="0.01" required class="form-input" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="machineDescription" class="form-label">Descripción</label>
+											<textarea id="machineDescription" name="machineDescription" rows="3" class="form-input form-textarea" placeholder="Describe las características y especificaciones de la máquina..."></textarea>
+										</div>
+
+										<div class="form-group">
+											<label for="machineImage" class="form-label">Imagen</label>
+											<select id="machineImage" name="machineImage" class="form-input form-select">
+												<option value="/images/machining_center_1.jpg">Centro de Maquinado 1</option>
+												<option value="/images/machining_center_2.jpg">Centro de Maquinado 2</option>
+												<option value="/images/cnc_lathe_1.jpg">Torno CNC</option>
+												<option value="/images/milling_machine_1.jpg">Fresadora</option>
+											</select>
+										</div>
+
+										<button type="submit" class="btn btn-primary" id="addMachineBtn">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<line x1="12" y1="5" x2="12" y2="19"/>
+												<line x1="5" y1="12" x2="19" y2="12"/>
+											</svg>
+											Agregar Máquina
+										</button>
+									</form>
+
+									<div id="machineMessage" class="alert" style="display: none;"></div>
 								</div>
 							</div>
+						</div>
 
-							<div class="form-group">
-								<label for="machineDescription">Descripción</label>
-								<textarea id="machineDescription" name="machineDescription" rows="3"></textarea>
-							</div>
-
-							<div class="form-group">
-								<label for="machineImage">Imagen</label>
-								<select id="machineImage" name="machineImage">
-									<option value="/images/machining_center_1.jpg">Centro de Maquinado 1</option>
-									<option value="/images/machining_center_2.jpg">Centro de Maquinado 2</option>
-									<option value="/images/cnc_lathe_1.jpg">Torno CNC</option>
-									<option value="/images/milling_machine_1.jpg">Fresadora</option>
-								</select>
-							</div>
-
-							<button type="submit" class="btn btn-primary" id="addMachineBtn">
-								Agregar Máquina
-							</button>
-						</form>
-
-						<div id="machineMessage" class="message"></div>
-					</div>
-
-					<div class="panel-section">
-						<h2>Máquinas Activas</h2>
-						<div id="machinesList" class="machines-list">
-							<div class="loading">
-								<div class="spinner"></div>
-								<p>Cargando máquinas...</p>
+						<!-- Machines List Section -->
+						<div class="panel-section">
+							<div class="card">
+								<div class="card-header">
+									<div class="section-header-with-actions">
+										<div>
+											<h2 class="section-title">Máquinas Activas</h2>
+											<p class="section-subtitle">Lista de máquinas disponibles en subasta</p>
+										</div>
+										<button class="btn btn-outline btn-sm" onclick="loadMachines()">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<path d="M23 4v6h-6"/>
+												<path d="M1 20v-6h6"/>
+												<path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+											</svg>
+											Actualizar
+										</button>
+									</div>
+								</div>
+								<div class="card-body">
+									<div id="machinesList" class="machines-list">
+										<div class="loading-state">
+											<div class="spinner"></div>
+											<p>Cargando máquinas...</p>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -94,43 +151,36 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
-	.admin-container {
+	.admin-page {
+		min-height: calc(100vh - 140px);
 		padding: 2rem 0;
-		min-height: calc(100vh - 160px);
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 	}
 
 	.admin-login {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 60vh;
+		min-height: calc(100vh - 200px);
 	}
 
-	.auth-card {
-		background: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		padding: 3rem;
-		max-width: 500px;
+	.login-container {
 		width: 100%;
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+		max-width: 450px;
 	}
 
-	.auth-header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.auth-header h1 {
-		font-size: 2.5rem;
+	.auth-title {
+		font-size: 1.875rem;
+		font-weight: 700;
+		color: var(--gray-900);
 		margin-bottom: 0.5rem;
-		color: #d4af37;
+		text-align: center;
 	}
 
-	.auth-header p {
-		color: rgba(255, 255, 255, 0.7);
-		font-size: 1.1rem;
+	.auth-subtitle {
+		color: var(--gray-600);
+		text-align: center;
+		margin: 0;
 	}
 
 	.auth-form {
@@ -139,85 +189,77 @@ import Layout from '../layouts/Layout.astro';
 		gap: 1.5rem;
 	}
 
-	.form-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.form-group label {
-		font-weight: 600;
-		color: #d4af37;
-	}
-
-	.form-group input,
-	.form-group textarea,
-	.form-group select {
+	.admin-credentials {
+		text-align: center;
 		padding: 1rem;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.1);
-		color: #ffffff;
-		font-size: 1rem;
-		transition: border-color 0.3s ease;
+		background: var(--gray-50);
+		border-radius: var(--border-radius);
+		border: 1px solid var(--gray-200);
 	}
 
-	.form-group input:focus,
-	.form-group textarea:focus,
-	.form-group select:focus {
-		outline: none;
-		border-color: #d4af37;
-	}
-
-	.form-group textarea {
-		resize: vertical;
-		min-height: 80px;
-	}
-
-	.btn-full {
-		width: 100%;
-		padding: 1rem;
-		font-size: 1.1rem;
-		margin-top: 1rem;
-	}
-
-	.admin-panel {
-		max-width: 1000px;
-		margin: 0 auto;
+	.credentials-text {
+		color: var(--gray-600);
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+		line-height: 1.4;
 	}
 
 	.panel-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 3rem;
-		padding-bottom: 1rem;
-		border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+		margin-bottom: 2rem;
+		padding: 2rem;
+		background: white;
+		border-radius: var(--border-radius-lg);
+		box-shadow: var(--shadow-sm);
+		border: 1px solid var(--gray-200);
 	}
 
-	.panel-header h1 {
-		font-size: 2.5rem;
-		color: #d4af37;
+	.header-content h1 {
+		font-size: 2rem;
+		font-weight: 700;
+		color: var(--gray-900);
+		margin-bottom: 0.25rem;
+	}
+
+	.header-content p {
+		color: var(--gray-600);
+		margin: 0;
 	}
 
 	.panel-content {
-		display: flex;
-		flex-direction: column;
-		gap: 3rem;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.panel-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
 	}
 
 	.panel-section {
-		background: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		padding: 2rem;
+		display: flex;
+		flex-direction: column;
 	}
 
-	.panel-section h2 {
-		color: #d4af37;
-		margin-bottom: 1.5rem;
-		font-size: 1.8rem;
+	.section-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: var(--gray-900);
+		margin-bottom: 0.25rem;
+	}
+
+	.section-subtitle {
+		color: var(--gray-600);
+		font-size: 0.875rem;
+		margin: 0;
+	}
+
+	.section-header-with-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
 	}
 
 	.machine-form {
@@ -233,31 +275,36 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.machines-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-		gap: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		max-height: 600px;
+		overflow-y: auto;
 	}
 
 	.machine-card {
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 12px;
+		background: var(--gray-50);
+		border: 1px solid var(--gray-200);
+		border-radius: var(--border-radius);
 		padding: 1.5rem;
-		transition: transform 0.3s ease;
+		transition: background-color 0.2s ease;
 	}
 
 	.machine-card:hover {
-		transform: translateY(-4px);
+		background: white;
 	}
 
 	.machine-card h3 {
-		color: #d4af37;
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: var(--gray-900);
 		margin-bottom: 0.5rem;
 	}
 
 	.machine-card p {
-		color: rgba(255, 255, 255, 0.7);
+		color: var(--gray-600);
 		margin-bottom: 0.5rem;
+		font-size: 0.875rem;
 	}
 
 	.machine-prices {
@@ -265,7 +312,7 @@ import Layout from '../layouts/Layout.astro';
 		justify-content: space-between;
 		margin-top: 1rem;
 		padding-top: 1rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		border-top: 1px solid var(--gray-200);
 	}
 
 	.price-info {
@@ -273,57 +320,45 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.price-label {
-		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.6);
+		font-size: 0.75rem;
+		color: var(--gray-500);
 		margin-bottom: 0.25rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	.price {
-		font-size: 1.1rem;
-		font-weight: bold;
-		color: #d4af37;
+	.price-value {
+		font-size: 1.125rem;
+		font-weight: 700;
+		color: var(--primary-color);
 	}
 
-	.loading {
-		grid-column: 1 / -1;
+	.machine-status {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.status-active {
+		background: rgb(16 185 129 / 0.1);
+		color: rgb(5 150 105);
+	}
+
+	.loading-state {
 		text-align: center;
-		padding: 2rem;
+		padding: 3rem 1rem;
+		color: var(--gray-500);
 	}
 
-	.spinner {
-		width: 40px;
-		height: 40px;
-		border: 3px solid rgba(212, 175, 55, 0.3);
-		border-top: 3px solid #d4af37;
-		border-radius: 50%;
-		animation: spin 1s linear infinite;
+	.loading-state .spinner {
+		width: 32px;
+		height: 32px;
 		margin: 0 auto 1rem;
-	}
-
-	@keyframes spin {
-		0% { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
-	}
-
-	.message {
-		margin-top: 1rem;
-		padding: 1rem;
-		border-radius: 8px;
-		text-align: center;
-		font-weight: 600;
-		display: none;
-	}
-
-	.message.success {
-		background: rgba(34, 197, 94, 0.2);
-		border: 1px solid rgba(34, 197, 94, 0.3);
-		color: #22c55e;
-	}
-
-	.message.error {
-		background: rgba(239, 68, 68, 0.2);
-		border: 1px solid rgba(239, 68, 68, 0.3);
-		color: #ef4444;
 	}
 
 	@media (max-width: 768px) {
@@ -333,12 +368,18 @@ import Layout from '../layouts/Layout.astro';
 			text-align: center;
 		}
 
+		.panel-grid {
+			grid-template-columns: 1fr;
+		}
+
 		.form-row {
 			grid-template-columns: 1fr;
 		}
 
-		.machines-list {
-			grid-template-columns: 1fr;
+		.section-header-with-actions {
+			flex-direction: column;
+			gap: 1rem;
+			align-items: stretch;
 		}
 	}
 </style>
@@ -368,6 +409,7 @@ import Layout from '../layouts/Layout.astro';
 
 		submitBtn.disabled = true;
 		submitBtn.textContent = 'Iniciando sesión...';
+		messageDiv.style.display = 'none';
 
 		try {
 			const response = await fetch('/api/admin/login', {
@@ -387,7 +429,7 @@ import Layout from '../layouts/Layout.astro';
 				setTimeout(() => {
 					showAdminPanel();
 					loadMachines();
-				}, 1500);
+				}, 1000);
 			} else {
 				showMessage('loginMessage', data.error || 'Credenciales inválidas', 'error');
 			}
@@ -411,6 +453,10 @@ import Layout from '../layouts/Layout.astro';
 		adminToken = null;
 		document.getElementById('adminLogin').style.display = 'block';
 		document.getElementById('adminPanel').style.display = 'none';
+		
+		// Clear forms
+		document.getElementById('adminLoginForm').reset();
+		document.getElementById('addMachineForm').reset();
 	}
 
 	// Handle add machine form
@@ -429,7 +475,8 @@ import Layout from '../layouts/Layout.astro';
 		};
 
 		submitBtn.disabled = true;
-		submitBtn.textContent = 'Agregando...';
+		submitBtn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px;"></div> Agregando...';
+		messageDiv.style.display = 'none';
 
 		try {
 			const response = await fetch('/api/machines', {
@@ -454,13 +501,28 @@ import Layout from '../layouts/Layout.astro';
 			showMessage('machineMessage', 'Error de conexión. Intenta nuevamente.', 'error');
 		} finally {
 			submitBtn.disabled = false;
-			submitBtn.textContent = 'Agregar Máquina';
+			submitBtn.innerHTML = `
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<line x1="12" y1="5" x2="12" y2="19"/>
+					<line x1="5" y1="12" x2="19" y2="12"/>
+				</svg>
+				Agregar Máquina
+			`;
 		}
 	});
 
 	// Load machines
 	async function loadMachines() {
+		const listContainer = document.getElementById('machinesList');
+		
 		try {
+			listContainer.innerHTML = `
+				<div class="loading-state">
+					<div class="spinner"></div>
+					<p>Cargando máquinas...</p>
+				</div>
+			`;
+
 			const response = await fetch('/api/machines');
 			const data = await response.json();
 
@@ -480,7 +542,7 @@ import Layout from '../layouts/Layout.astro';
 		
 		if (machines.length === 0) {
 			list.innerHTML = `
-				<div class="loading">
+				<div class="loading-state">
 					<p>No hay máquinas registradas.</p>
 				</div>
 			`;
@@ -489,17 +551,21 @@ import Layout from '../layouts/Layout.astro';
 
 		list.innerHTML = machines.map(machine => `
 			<div class="machine-card">
-				<h3>${machine.name}</h3>
-				<p>${machine.description || 'Sin descripción'}</p>
-				<p><strong>Estado:</strong> ${machine.status === 'active' ? 'Activa' : 'Inactiva'}</p>
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+					<h3>${machine.name}</h3>
+					<span class="machine-status status-${machine.status}">
+						${machine.status === 'active' ? 'Activa' : 'Inactiva'}
+					</span>
+				</div>
+				<p>${machine.description || 'Sin descripción disponible'}</p>
 				<div class="machine-prices">
 					<div class="price-info">
 						<div class="price-label">Precio inicial</div>
-						<div class="price">$${machine.initial_price.toLocaleString()}</div>
+						<div class="price-value">$${parseFloat(machine.initial_price).toLocaleString()}</div>
 					</div>
 					<div class="price-info">
 						<div class="price-label">Precio actual</div>
-						<div class="price">$${machine.current_price.toLocaleString()}</div>
+						<div class="price-value">$${parseFloat(machine.current_price).toLocaleString()}</div>
 					</div>
 				</div>
 			</div>
@@ -509,8 +575,8 @@ import Layout from '../layouts/Layout.astro';
 	function showMachinesError(message) {
 		const list = document.getElementById('machinesList');
 		list.innerHTML = `
-			<div class="loading">
-				<p style="color: #ef4444;">${message}</p>
+			<div class="loading-state">
+				<p style="color: var(--error-color);">${message}</p>
 			</div>
 		`;
 	}
@@ -518,18 +584,14 @@ import Layout from '../layouts/Layout.astro';
 	function showMessage(elementId, text, type) {
 		const messageDiv = document.getElementById(elementId);
 		messageDiv.textContent = text;
-		messageDiv.className = `message ${type}`;
+		messageDiv.className = `alert alert-${type}`;
 		messageDiv.style.display = 'block';
-		
-		setTimeout(() => {
-			messageDiv.style.display = 'none';
-		}, 5000);
 	}
 
 	// Make functions global
 	window.adminLogout = adminLogout;
+	window.loadMachines = loadMachines;
 
 	// Check auth on page load
 	document.addEventListener('DOMContentLoaded', checkAdminAuth);
 </script>
-

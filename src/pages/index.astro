@@ -2,49 +2,113 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Numérica - Subastas de Maquinaria Industrial">
-	<div class="hero">
+<Layout title="Numérica - Plataforma de Subastas de Maquinaria Industrial">
+	<section class="hero">
 		<div class="container">
 			<div class="hero-content">
-				<h1 class="hero-title">Subastas de Maquinaria Industrial</h1>
-				<p class="hero-subtitle">
-					Encuentra las mejores máquinas CNC, centros de maquinado, tornos y fresadoras 
-					en nuestra plataforma de subastas en línea.
-				</p>
-				<div class="hero-buttons">
-					<a href="/subastas" class="btn btn-primary btn-large">Ver Subastas Activas</a>
-					<a href="/register" class="btn btn-secondary btn-large">Registrarse</a>
+				<div class="hero-text">
+					<h1 class="hero-title">Subastas de Maquinaria Industrial</h1>
+					<p class="hero-description">
+						Plataforma profesional para la compra y venta de maquinaria CNC, centros de maquinado, 
+						tornos y fresadoras industriales a través de subastas en línea.
+					</p>
+					<div class="hero-actions">
+						<a href="/subastas" class="btn btn-primary btn-lg">Ver Subastas Activas</a>
+						<a href="/register" class="btn btn-outline btn-lg">Crear Cuenta</a>
+					</div>
+				</div>
+				<div class="hero-image">
+					<img src="/images/machining_center_1.jpg" alt="Centro de Maquinado CNC" />
 				</div>
 			</div>
-			<div class="hero-image">
-				<img src="/images/machining_center_1.jpg" alt="Centro de Maquinado" />
-			</div>
 		</div>
-	</div>
+	</section>
 
 	<section class="features">
 		<div class="container">
-			<h2 class="section-title">¿Por qué elegir Numérica?</h2>
+			<div class="section-header">
+				<h2 class="section-title">¿Por qué elegir Numérica?</h2>
+				<p class="section-description">
+					Conectamos compradores y vendedores de maquinaria industrial con transparencia y confianza
+				</p>
+			</div>
+			
 			<div class="features-grid">
 				<div class="feature-card">
-					<div class="feature-icon">🏭</div>
-					<h3>Maquinaria Especializada</h3>
-					<p>Centros de maquinado CNC, tornos, fresadoras y equipos industriales de alta calidad.</p>
+					<div class="feature-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M9 12l2 2 4-4"/>
+							<path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+							<path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+							<path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+							<path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+						</svg>
+					</div>
+					<h3 class="feature-title">Maquinaria Certificada</h3>
+					<p class="feature-description">
+						Equipos industriales verificados con documentación completa y historial de mantenimiento.
+					</p>
 				</div>
+
 				<div class="feature-card">
-					<div class="feature-icon">⚡</div>
-					<h3>Subastas en Tiempo Real</h3>
-					<p>Sistema de pujas dinámico que actualiza los precios instantáneamente.</p>
+					<div class="feature-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+						</svg>
+					</div>
+					<h3 class="feature-title">Proceso Transparente</h3>
+					<p class="feature-description">
+						Sistema de pujas en tiempo real con historial completo y notificaciones instantáneas.
+					</p>
 				</div>
+
 				<div class="feature-card">
-					<div class="feature-icon">🔒</div>
-					<h3>Seguro y Confiable</h3>
-					<p>Plataforma segura con registro verificado y transacciones protegidas.</p>
+					<div class="feature-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+							<circle cx="12" cy="16" r="1"/>
+							<path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+						</svg>
+					</div>
+					<h3 class="feature-title">Seguridad Garantizada</h3>
+					<p class="feature-description">
+						Transacciones seguras con verificación de identidad y protección de datos personales.
+					</p>
 				</div>
+
 				<div class="feature-card">
-					<div class="feature-icon">📱</div>
-					<h3>Fácil de Usar</h3>
-					<p>Interfaz intuitiva optimizada para dispositivos móviles y escritorio.</p>
+					<div class="feature-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+						</svg>
+					</div>
+					<h3 class="feature-title">Soporte Especializado</h3>
+					<p class="feature-description">
+						Equipo de expertos en maquinaria industrial disponible para asesoramiento técnico.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="stats">
+		<div class="container">
+			<div class="stats-grid">
+				<div class="stat-item">
+					<div class="stat-number">500+</div>
+					<div class="stat-label">Máquinas Vendidas</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">150+</div>
+					<div class="stat-label">Empresas Registradas</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">98%</div>
+					<div class="stat-label">Satisfacción del Cliente</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number">24/7</div>
+					<div class="stat-label">Soporte Técnico</div>
 				</div>
 			</div>
 		</div>
@@ -53,9 +117,14 @@ import Layout from '../layouts/Layout.astro';
 	<section class="cta">
 		<div class="container">
 			<div class="cta-content">
-				<h2>¿Listo para participar?</h2>
-				<p>Únete a nuestra comunidad de compradores y encuentra la maquinaria que necesitas.</p>
-				<a href="/register" class="btn btn-primary btn-large">Comenzar Ahora</a>
+				<h2 class="cta-title">¿Listo para comenzar?</h2>
+				<p class="cta-description">
+					Únete a nuestra plataforma y accede a las mejores oportunidades en maquinaria industrial.
+				</p>
+				<div class="cta-actions">
+					<a href="/register" class="btn btn-primary btn-lg">Crear Cuenta Gratuita</a>
+					<a href="/subastas" class="btn btn-secondary btn-lg">Explorar Subastas</a>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -64,10 +133,10 @@ import Layout from '../layouts/Layout.astro';
 <style>
 	.hero {
 		padding: 4rem 0;
-		background: linear-gradient(135deg, rgba(26, 35, 50, 0.9) 0%, rgba(45, 55, 72, 0.9) 100%);
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 	}
 
-	.hero .container {
+	.hero-content {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 4rem;
@@ -75,51 +144,57 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.hero-title {
-		font-size: 3.5rem;
-		font-weight: bold;
+		font-size: 3rem;
+		font-weight: 800;
+		line-height: 1.1;
+		color: var(--gray-900);
 		margin-bottom: 1.5rem;
-		background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		line-height: 1.2;
+		letter-spacing: -0.025em;
 	}
 
-	.hero-subtitle {
-		font-size: 1.25rem;
-		color: rgba(255, 255, 255, 0.8);
+	.hero-description {
+		font-size: 1.125rem;
+		color: var(--gray-600);
 		margin-bottom: 2rem;
-		line-height: 1.6;
+		line-height: 1.7;
 	}
 
-	.hero-buttons {
+	.hero-actions {
 		display: flex;
 		gap: 1rem;
-	}
-
-	.btn-large {
-		padding: 1rem 2rem;
-		font-size: 1.1rem;
 	}
 
 	.hero-image img {
 		width: 100%;
 		height: 400px;
 		object-fit: cover;
-		border-radius: 16px;
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+		border-radius: var(--border-radius-lg);
+		box-shadow: var(--shadow-xl);
 	}
 
 	.features {
 		padding: 6rem 0;
-		background: rgba(255, 255, 255, 0.05);
+		background: white;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 4rem;
 	}
 
 	.section-title {
-		text-align: center;
 		font-size: 2.5rem;
-		margin-bottom: 3rem;
-		color: #d4af37;
+		font-weight: 700;
+		color: var(--gray-900);
+		margin-bottom: 1rem;
+		letter-spacing: -0.025em;
+	}
+
+	.section-description {
+		font-size: 1.125rem;
+		color: var(--gray-600);
+		max-width: 600px;
+		margin: 0 auto;
 	}
 
 	.features-grid {
@@ -129,85 +204,126 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.feature-card {
-		background: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		padding: 2rem;
 		text-align: center;
-		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		padding: 2rem;
+		border-radius: var(--border-radius-lg);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
 	}
 
 	.feature-card:hover {
-		transform: translateY(-8px);
-		box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-lg);
 	}
 
 	.feature-icon {
-		font-size: 3rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 64px;
+		height: 64px;
+		background: var(--primary-color);
+		color: white;
+		border-radius: 50%;
+		margin-bottom: 1.5rem;
+	}
+
+	.feature-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: var(--gray-900);
 		margin-bottom: 1rem;
 	}
 
-	.feature-card h3 {
-		font-size: 1.5rem;
-		margin-bottom: 1rem;
-		color: #d4af37;
-	}
-
-	.feature-card p {
-		color: rgba(255, 255, 255, 0.8);
+	.feature-description {
+		color: var(--gray-600);
 		line-height: 1.6;
 	}
 
-	.cta {
+	.stats {
 		padding: 4rem 0;
-		background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-		color: #1a2332;
+		background: var(--primary-color);
+		color: white;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 2rem;
+	}
+
+	.stat-item {
+		text-align: center;
+	}
+
+	.stat-number {
+		font-size: 3rem;
+		font-weight: 800;
+		margin-bottom: 0.5rem;
+	}
+
+	.stat-label {
+		font-size: 1rem;
+		opacity: 0.9;
+	}
+
+	.cta {
+		padding: 6rem 0;
+		background: var(--gray-50);
 	}
 
 	.cta-content {
 		text-align: center;
+		max-width: 800px;
+		margin: 0 auto;
 	}
 
-	.cta h2 {
+	.cta-title {
 		font-size: 2.5rem;
+		font-weight: 700;
+		color: var(--gray-900);
 		margin-bottom: 1rem;
 	}
 
-	.cta p {
-		font-size: 1.25rem;
+	.cta-description {
+		font-size: 1.125rem;
+		color: var(--gray-600);
 		margin-bottom: 2rem;
-		opacity: 0.8;
+		line-height: 1.7;
 	}
 
-	.cta .btn-primary {
-		background: #1a2332;
-		color: #d4af37;
-	}
-
-	.cta .btn-primary:hover {
-		background: #2d3748;
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(26, 35, 50, 0.3);
+	.cta-actions {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
 	}
 
 	@media (max-width: 768px) {
-		.hero .container {
+		.hero-content {
 			grid-template-columns: 1fr;
 			gap: 2rem;
 		}
 
 		.hero-title {
-			font-size: 2.5rem;
+			font-size: 2.25rem;
 		}
 
-		.hero-buttons {
+		.hero-actions,
+		.cta-actions {
 			flex-direction: column;
 		}
 
-		.features-grid {
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.stat-number {
+			font-size: 2rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.stats-grid {
 			grid-template-columns: 1fr;
 		}
 	}
 </style>
-
