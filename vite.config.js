@@ -1,8 +1,9 @@
-// vite.config.js
-export default {
+import { defineConfig } from 'vite'
+
+export default defineConfig({
   build: {
     rollupOptions: {
-      external: ['bcryptjs'],
+      external: ['bcryptjs'], // Evita que lo empaquete
     },
   },
-};
+})
