@@ -1,7 +1,14 @@
 import jwt from 'jsonwebtoken';
 import { sql } from '../../../lib/db.js';
+import { scryptSync } from 'crypto';
 
 const JWT_SECRET = 'numerica-auction-admin-secret-key-2025';
+
+function verifyPassword(stored, passwordAttempt) {
+  const [salt, key] = stored.split(':');
+  const hashAttempt = scryptSync(passwordAttempt, salt, 64).toString('hex');
+  return key === hashAttempt;
+}
 
 export async function POST({ request }) {
   try {
@@ -14,11 +21,11 @@ export async function POST({ request }) {
       });
     }
 
-    // Find admin user
+    // Buscar admin
     const admins = await sql`
       SELECT * FROM admin_users WHERE username = ${username}
     `;
-    if (admins.length === 0 || admins[0].password !== password) {
+    if (admins.length === 0) {
       return new Response(JSON.stringify({ error: 'Credenciales inválidas' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
@@ -27,14 +34,22 @@ export async function POST({ request }) {
 
     const admin = admins[0];
 
-    // Generate JWT token
+    // Verificar password usando scrypt
+    if (!verifyPassword(admin.password, password)) {
+      return new Response(JSON.stringify({ error: 'Credenciales inválidas' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Crear token JWT
     const token = jwt.sign(
       { adminId: admin.id, username: admin.username, role: 'admin' },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       success: true,
       token,
       admin: {
@@ -48,10 +63,9 @@ export async function POST({ request }) {
 
   } catch (error) {
     console.error('Admin login error:', error);
-    return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {
+    return new Response(JSON.stringify({ error: error.message || 'Error interno del servidor' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 }
-
